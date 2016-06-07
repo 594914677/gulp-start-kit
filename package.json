@@ -4,8 +4,8 @@
   "description": "",
   "main": "gulpfile.js",
   "scripts": {
-    "clean":"rimraf dist",
-    "build":"npm run clean && gulp",
+    "clean": "rimraf dist",
+    "build": "npm run clean && gulp",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -24,11 +24,17 @@
     "gulp": "^3.9.1",
     "gulp-babel": "^6.1.2",
     "gulp-browserify": "^0.5.1",
+    "gulp-clean": "^0.3.2",
     "gulp-concat": "^2.6.0",
     "gulp-jasmine": "^2.3.0",
     "gulp-less": "^3.1.0",
+    "gulp-print": "^2.0.1",
     "gulp-react": "^3.1.0",
     "gulp-sass": "^2.3.1",
-    "gulp-uglify": "^1.5.3"
+    "gulp-sourcemaps": "^1.6.0",
+    "gulp-uglify": "^1.5.3",
+    "gulp-util": "^3.0.7",
+    "gulp-watch": "^4.3.6",
+    "run-sequence": "^1.2.1"
   }
 }
