@@ -37,8 +37,7 @@ config.babel = {
 config.dist = './dist';
 config.static = [
     'bin/**/*',
-    'public/**/*',
-    'src/css/*'
+    'public/**/*'
 ];
 
 
