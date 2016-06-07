@@ -134,11 +134,11 @@ gulp.task(compile_server, function () {
         .pipe(sourcemaps.init())
         .pipe(react())
         .pipe(babel(config.babel))
-        .pipe(sourcemaps.write({includeContent: false, sourceRoot: config.dist}))
         .pipe(browserify())
         .pipe(concat('bundle.js'))
         .pipe(rename({ suffix: '.min' }))
         .pipe(uglify())
+        .pipe(sourcemaps.write(".",{sourceRoot: config.dist}))
         .pipe(gulp.dest(config.dist));
 });
 
@@ -159,11 +159,11 @@ gulp.task(compile_server_dev, function () {
                         .on('error', function (err) {
                             util.log('[Babel] compile error: ' + obj.path.replace(obj.base, '') + '\n' + err);
                         })
-                        .pipe(sourcemaps.write('.', {sourceRoot: './dist/sourcemaps'}))
                         .pipe(browserify())
                         .pipe(concat('bundle.js'))
                         .pipe(rename({ suffix: '.min' }))
                         .pipe(uglify())
+                        .pipe(sourcemaps.write('.', {sourceRoot: './dist/sourcemaps'}))
                         .pipe(gulp.dest(config.dist))
                         .on('end', function () {
                             util.log('[Babel] file compiled: ' + obj.path.replace(obj.base, ''));
