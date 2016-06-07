@@ -6,6 +6,7 @@
   "scripts": {
     "clean": "rimraf dist",
     "build": "gulp && gulp gulp_minify_css",
+    "check": "gulp gulp_jshint",
     "test": "gulp test"
   },
   "repository": {

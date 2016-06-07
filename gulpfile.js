@@ -58,10 +58,10 @@ gulp.task(transformSass, function () {
 });
 
 // 检查js
-gulp.task('lint', function() {
+gulp.task(gulp_jshint, function() {
     return gulp.src('src/*.es6')
         .pipe(print())
-        .pipe(jslint())
+        .pipe(jslint({'esversion': 6}))
         .pipe(jslint.reporter('default'))
         .pipe(notify({ message: 'lint task ok' }));
 });
