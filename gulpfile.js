@@ -104,16 +104,16 @@ gulp.task(gulp_clean, function () {
 
 // compile server script in production mode
 gulp.task(compile_server, function () {
-        return gulp.src('src/*.es6', {base: './'})
-            .pipe(print())
-            .pipe(sourcemaps.init())
-            .pipe(react())
-            .pipe(babel(config.babel))
-            .pipe(sourcemaps.write({includeContent: false, sourceRoot: config.dist}))
-            .pipe(browserify())
-            .pipe(concat('bundle.min.js'))
-            .pipe(uglify())
-            .pipe(gulp.dest(config.dist));
+    return gulp.src('src/*.es6', {base: './'})
+        .pipe(print())
+        .pipe(sourcemaps.init())
+        .pipe(react())
+        .pipe(babel(config.babel))
+        .pipe(sourcemaps.write({includeContent: false, sourceRoot: config.dist}))
+        .pipe(browserify())
+        .pipe(concat('bundle.min.js'))
+        .pipe(uglify())
+        .pipe(gulp.dest(config.dist));
 });
 
 // compile server script in develop mode, automatic compile script when file change
@@ -156,11 +156,11 @@ gulp.task(compile_server_dev, function () {
 
 
 gulp.task(build, function () {
-    runSequence(gulp_clean, [static_sync, compile_server,transformSass,transformLess]);
+    runSequence(gulp_clean, [static_sync, compile_server, transformSass, transformLess]);
 });
 
 gulp.task(build_dev, function () {
-    runSequence([static_sync_dev, compile_server_dev]);
+    runSequence([transformSass, transformLess, static_sync_dev, compile_server_dev]);
 });
 
 gulp.task('default', ['build']);
