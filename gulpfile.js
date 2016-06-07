@@ -14,7 +14,7 @@ var sourcemaps = require('gulp-sourcemaps');
 var util = require('gulp-util');
 var runSequence = require('run-sequence');
 
-const transformJs = "transformJs";
+//任务
 const transformSass = "transformSass";
 const transformLess = "transformLess";
 const test = 'test';
@@ -29,31 +29,20 @@ const compile_server_dev = 'compile:server:dev';
 const build = 'build';
 const build_dev = 'build:dev';
 
+//配置
 var config = {};
-config.babel = {};
-config.dist = 'dist';
+config.babel = {
+    presets: ['babel-preset-es2015']
+};
+config.dist = './dist';
 config.static = [
     'bin/**/*',
     'public/**/*',
-    'src/css/*',
-    'package.json'
+    'src/css/*'
 ];
 
 
-//js编译打包合并压缩
-gulp.task(transformJs, function () {
-    return gulp.src("src/*.js")
-        .pipe(react())
-        .pipe(babel(
-            {
-                presets: ["babel-preset-es2015"]
-            }
-        ))
-        .pipe(browserify())
-        .pipe(concat('bundle.min.js'))
-        .pipe(uglify())
-        .pipe(gulp.dest("./dist"))
-});
+// 任务************************************************************************************
 
 // scss变异
 gulp.task(transformSass, function () {
@@ -77,16 +66,11 @@ gulp.task(test, function () {
         .pipe(jasmine())
 });
 
-//显示日志
-gulp.task(gulp_print, function () {
-    gulp.src('src/*.js')
-        .pipe(print())
-});
-
 
 //拷贝静态资源
 gulp.task(static_sync, function () {
     return gulp.src(config.static, {base: './'})
+        .pipe(print())
         .pipe(gulp.dest('./dist'));
 });
 
@@ -96,6 +80,7 @@ gulp.task(static_sync_dev, [static_sync], function () {
     return watch(config.static, function (obj) {
         if (obj.event === 'change' || obj.event === 'add')
             return gulp.src(obj.path, {base: './'})
+                .pipe(print())
                 .pipe(gulp.dest(config.dist))
                 .pipe(print(function () {
                     return '[Sync] file sync success: ' + obj.path.replace(obj.base, '');
@@ -103,6 +88,7 @@ gulp.task(static_sync_dev, [static_sync], function () {
         else if (obj.event === 'unlink') {
             var distFilePath = obj.path.replace(__dirname, __dirname + '/' + config.dist);
             return gulp.src(distFilePath)
+                .pipe(print())
                 .pipe(clean())
                 .pipe(print(function () {
                     return '[Sync] file remove success: ' + obj.path.replace(obj.base, '');
@@ -113,27 +99,27 @@ gulp.task(static_sync_dev, [static_sync], function () {
 
 gulp.task(gulp_clean, function () {
     return gulp.src(config.dist + '/*', {read: false})
+        .pipe(print())
         .pipe(clean());
 });
 
 // compile server script in production mode
 gulp.task(compile_server, function () {
-    if (config.babel.sourceMaps)
-        return gulp.src('**/*.es6', {base: './'})
+        return gulp.src('src/*.es6', {base: './'})
+            .pipe(print())
             .pipe(sourcemaps.init())
+            .pipe(react())
             .pipe(babel(config.babel))
-            .pipe(sourcemaps.write('.', {sourceRoot: '/ustar'}))
-            .pipe(gulp.dest(config.dist));
-    else
-        return gulp.src('**/*.es6', {base: './'})
-            .pipe(babel(config.babel))
+            .pipe(sourcemaps.write({includeContent: false, sourceRoot: config.dist}))
+            .pipe(browserify())
+            .pipe(concat('bundle.min.js'))
+            .pipe(uglify())
             .pipe(gulp.dest(config.dist));
 });
 
 // compile server script in develop mode, automatic compile script when file change
 gulp.task(compile_server_dev, function () {
     config.babel.sourceMaps = true;
-
     return runSequence(
         compile_server,
         function () {
@@ -142,12 +128,16 @@ gulp.task(compile_server_dev, function () {
                 if (obj.event === 'change' || obj.event === 'add') {
                     util.log('[Babel] file compiling: ' + obj.path.replace(obj.base, ''));
                     return gulp.src(obj.path, {base: './'})
+                        .pipe(print())
                         .pipe(sourcemaps.init())
                         .pipe(babel(config.babel))
                         .on('error', function (err) {
                             util.log('[Babel] compile error: ' + obj.path.replace(obj.base, '') + '\n' + err);
                         })
-                        .pipe(sourcemaps.write('.', {sourceRoot: '/ustar'}))
+                        .pipe(sourcemaps.write('.', {sourceRoot: './dist/sourcemaps'}))
+                        .pipe(browserify())
+                        .pipe(concat('bundle.min.js'))
+                        .pipe(uglify())
                         .pipe(gulp.dest(config.dist))
                         .on('end', function () {
                             util.log('[Babel] file compiled: ' + obj.path.replace(obj.base, ''));
@@ -166,9 +156,8 @@ gulp.task(compile_server_dev, function () {
 });
 
 
-// build task
 gulp.task(build, function () {
-    runSequence(gulp_clean, [static_sync, compile_server]);
+    runSequence(gulp_clean, [static_sync, compile_server,transformSass,transformLess]);
 });
 
 gulp.task(build_dev, function () {
