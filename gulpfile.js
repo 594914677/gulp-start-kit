@@ -55,15 +55,16 @@ gulp.task(transformSass, function () {
         .pipe(print())
         .pipe(sass())
         .pipe(gulp.dest("./dist"))
+        .pipe(notify({message: 'sass task ok'}));
 });
 
 // 检查js
-gulp.task(gulp_jshint, function() {
+gulp.task(gulp_jshint, function () {
     return gulp.src('src/*.es6')
         .pipe(print())
         .pipe(jslint({'esversion': 6}))
         .pipe(jslint.reporter('default'))
-        .pipe(notify({ message: 'lint task ok' }));
+        .pipe(notify({message: 'lint task ok'}));
 });
 
 
@@ -73,14 +74,16 @@ gulp.task(transformLess, function () {
         .pipe(print())
         .pipe(less())
         .pipe(gulp.dest("./dist"))
+        .pipe(notify({message: 'less task ok'}));
 });
 
 
-gulp.task(gulp_minify_css,function () {
-   return gulp.src('./dist/*.css')
-       .pipe(print())
-       .pipe(minifycss())
-       .pipe(gulp.dest(config.dist))
+gulp.task(gulp_minify_css, function () {
+    return gulp.src('./dist/*.css')
+        .pipe(print())
+        .pipe(minifycss())
+        .pipe(gulp.dest(config.dist))
+        .pipe(notify({message: 'minify-css task ok'}));
 });
 
 // jasmine测试
@@ -88,6 +91,7 @@ gulp.task(test, function () {
     return gulp.src("./test/*.js")
         .pipe(print())
         .pipe(jasmine())
+        .pipe(notify({message: 'test task ok'}));
 });
 
 
@@ -95,7 +99,8 @@ gulp.task(test, function () {
 gulp.task(static_sync, function () {
     return gulp.src(config.static, {base: './'})
         .pipe(print())
-        .pipe(gulp.dest('./dist'));
+        .pipe(gulp.dest('./dist'))
+        .pipe(notify({message: 'copy-file task ok'}));
 });
 
 // 热加载
@@ -124,7 +129,8 @@ gulp.task(static_sync_dev, [static_sync], function () {
 gulp.task(gulp_clean, function () {
     return gulp.src(config.dist + '/*', {read: false})
         .pipe(print())
-        .pipe(clean());
+        .pipe(clean())
+        .pipe(notify({message: 'clean task ok'}));
 });
 
 // compile server script in production mode
@@ -136,10 +142,11 @@ gulp.task(compile_server, function () {
         .pipe(babel(config.babel))
         .pipe(browserify())
         .pipe(concat('bundle.js'))
-        .pipe(rename({ suffix: '.min' }))
+        .pipe(rename({suffix: '.min'}))
         .pipe(uglify())
-        .pipe(sourcemaps.write(".",{sourceRoot: config.dist}))
-        .pipe(gulp.dest(config.dist));
+        .pipe(sourcemaps.write(".", {sourceRoot: config.dist}))
+        .pipe(gulp.dest(config.dist))
+        .pipe(notify({message: 'compile task ok'}));
 });
 
 // compile server script in develop mode, automatic compile script when file change
@@ -161,7 +168,7 @@ gulp.task(compile_server_dev, function () {
                         })
                         .pipe(browserify())
                         .pipe(concat('bundle.js'))
-                        .pipe(rename({ suffix: '.min' }))
+                        .pipe(rename({suffix: '.min'}))
                         .pipe(uglify())
                         .pipe(sourcemaps.write('.', {sourceRoot: './dist/sourcemaps'}))
                         .pipe(gulp.dest(config.dist))
@@ -187,7 +194,7 @@ gulp.task(build, function () {
 });
 
 gulp.task(build_dev, function () {
-    runSequence([ static_sync_dev, compile_server_dev,transformSass, transformLess]);
+    runSequence([static_sync_dev, compile_server_dev, transformSass, transformLess]);
 });
 
 gulp.task('default', ['build']);
