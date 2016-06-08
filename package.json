@@ -1,7 +1,7 @@
 {
   "name": "gulp-start-kit",
   "version": "1.0.0",
-  "description": "",
+  "description": "a gulp build project",
   "main": "gulpfile.js",
   "scripts": {
     "clean": "rimraf dist",
@@ -13,9 +13,9 @@
     "type": "git",
     "url": "git+https://github.com/qq83387856/gulp-start-kit.git"
   },
-  "keywords": [],
+  "keywords": ["gulp"],
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/qq83387856/gulp-start-kit/issues"
   },
