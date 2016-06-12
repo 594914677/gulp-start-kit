@@ -13,7 +13,7 @@
     "type": "git",
     "url": "git+https://github.com/qq83387856/gulp-start-kit.git"
   },
-  "keywords": ["gulp"],
+  "keywords": ["gulp","es6"],
   "author": "",
   "license": "MIT",
   "bugs": {
